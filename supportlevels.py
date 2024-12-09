@@ -35,12 +35,55 @@ def resistance(df1, l, n1, n2): #n1 n2 before and after candle l
 
     return 0
 
+#------------------------------------------------------------------------------------------------------------
+
+def closeResistance(l,levels,lim, df):
+    if len(levels)==0:
+        return 0
+    c1 = abs(df.High[l]-min(levels, key=lambda x:abs(x-df.High[l])))<=lim
+    c2 = abs(max(df.Open[l],df.Close[l])-min(levels, key=lambda x:abs(x-df.High[l])))<=lim
+    c3 = min(df.Open[l],df.Close[l])<min(levels, key=lambda x:abs(x-df.High[l]))
+    c4 = df.Low[l]<min(levels, key=lambda x:abs(x-df.High[l]))
+    if( (c1 or c2) and c3 and c4 ):
+        return min(levels, key=lambda x:abs(x-df.High[l]))
+    else:
+        return 0
+    
+def closeSupport(l,levels,lim, df):
+    if len(levels)==0:
+        return 0
+    
+    
+    c1 = abs(df.Low[l]-min(levels, key=lambda x: abs(x-df.Low[l])) )<=lim
+    c2 = abs(min(df.Open[l],df.Close[l])-min(levels, key=lambda x:abs(x-df.Low[l])))<=lim
+
+    c3 = max(df.Open[l],df.Close[l])>min(levels, key=lambda x:abs(x-df.Low[l]))
+
+    c4 = df.High[l]>min(levels, key=lambda x:abs(x-df.Low[l]))
+
+    if( (c1 or c2) and c3 and c4 ):
+        return min(levels, key=lambda x:abs(x-df.Low[l]))
+    else:
+        return 0
+
+def is_below_resistance(l, level_backCandles, level, df):
+    return df.loc[l-level_backCandles:l-1, 'High'].max() < level
+
+def is_above_support(l, level_backCandles, level, df):
+    return df.loc[l-level_backCandles:l-1, 'Low'].min() > level
+
 
 #print(df)
 
-for i in range(0, len(df)-1):
-    if resistance(df, i,3,3) == 1:
-        print("found")
+for l in range(0, len(df)):
+    #if closeSupport(i,[10,11,15],0.08,df) > 0:
+    #    print( "found" )
+    #The key is on the level
+    if is_above_support(l, 6,0.003,df):
+        print(l)
+
+
+
 
 
 print("Program ended.")
