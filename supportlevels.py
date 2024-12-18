@@ -72,18 +72,9 @@ def is_below_resistance(l, level_backCandles, level, df):
 def is_above_support(l, level_backCandles, level, df):
     return df.loc[l-level_backCandles:l-1, 'Low'].min() > level
 
-
-#print(df)
-
-for l in range(0, len(df)):
-    #if closeSupport(i,[10,11,15],0.08,df) > 0:
-    #    print( "found" )
-    #The key is on the level
-    if is_above_support(l, 6,0.003,df):
-        print(l)
-
-
-
+for i in range(0, len(df)):
+    if support(df, i, 3, 3):
+        print(i)
 
 
 print("Program ended.")
