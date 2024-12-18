@@ -72,9 +72,25 @@ def is_below_resistance(l, level_backCandles, level, df):
 def is_above_support(l, level_backCandles, level, df):
     return df.loc[l-level_backCandles:l-1, 'Low'].min() > level
 
-for i in range(0, len(df)):
-    if support(df, i, 3, 3):
-        print(i)
+openprices = df["Open"].to_list()
+supports = []
+resistances = []
 
+closeToSupport = []
+closeToResistance = []
+
+for i in range(0, len(df)):
+    if resistance(df, i, 3, 3):
+        resistances.append(openprices[i])
+    if support(df, i, 3,3):
+        supports.append(openprices[i])
+
+for i in range(0, len(df)):
+    if closeSupport(i,supports,0.05,df) != 0:
+        closeToSupport.append(df.iloc[i])
+    if closeResistance(i,resistances,0.05,df) != 0:
+        closeToResistance.append(df.iloc[i])
+
+print(closeToSupport)
 
 print("Program ended.")
