@@ -85,12 +85,52 @@ for i in range(0, len(df)):
     if support(df, i, 3,3):
         supports.append(openprices[i])
 
+supports.sort() #keep lowest support when popping a level
+for i in range(1,len(supports)):
+    if(i>=len(supports)):
+        break
+    if abs(supports[i]-supports[i-1])<=0.001: # merging close distance levels
+        supports.pop(i)
+
+resistances.sort(reverse=True) # keep highest resistance when popping one
+for i in range(1,len(resistances)):
+    if(i>=len(resistances)):
+        break
+    if abs(resistances[i]-resistances[i-1])<=0.001: # merging close distance levels
+        resistances.pop(i)
+
+#----------------------------------------------------------------------
+# joined levels
+rrss = resistances+supports
+rrss.sort()
+for i in range(1,len(rrss)):
+    if(i>=len(rrss)):
+        break
+    if abs(rrss[i]-rrss[i-1])<=0.0001: # merging close distance levels
+        rrss.pop(i)
+
+
+
 for i in range(0, len(df)):
     if closeSupport(i,supports,0.05,df) != 0:
         closeToSupport.append(df.iloc[i])
     if closeResistance(i,resistances,0.05,df) != 0:
         closeToResistance.append(df.iloc[i])
 
-print(closeToSupport)
+'''
+supportList = []
+resistanceList = []
+
+for l in range(0, len(closeToResistance)):
+    if ( is_below_resistance(l,6,closeToResistance[l]["Open"], df) and df.RSI[l-1:l].min()<30 ):
+        resistanceList.append(df.iloc[l])
+
+for l in range(0, len(closeToSupport)):
+    if( is_above_support(l,6,closeToSupport[l]["Open"],df) and df.RSI[l-1:l].max()>70 ):
+        supportList.append(df.iloc[l])
+'''
+
+
+print(len(closeToResistance))
 
 print("Program ended.")
