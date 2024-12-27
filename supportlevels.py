@@ -1,10 +1,16 @@
 import yfinance as yf
 import pandas as pd
 import pandas_ta as ta
+import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+from datetime import datetime
+import matplotlib.pyplot as plt
+
 
 print("Program started")
 
-df = yf.download("VET", start="2022-04-01", end="2023-05-03",  interval = "1d")
+df = yf.download("VET", start="2023-04-01", end="2024-12-10",  interval = "1d")
 df=df[df['Volume']!=0]
 df.reset_index(drop=True, inplace=True)
 df.isna().sum()
@@ -117,7 +123,7 @@ for i in range(0, len(df)):
     if closeResistance(i,resistances,0.05,df) != 0:
         closeToResistance.append(df.iloc[i])
 
-'''
+
 supportList = []
 resistanceList = []
 
@@ -128,9 +134,195 @@ for l in range(0, len(closeToResistance)):
 for l in range(0, len(closeToSupport)):
     if( is_above_support(l,6,closeToSupport[l]["Open"],df) and df.RSI[l-1:l].max()>70 ):
         supportList.append(df.iloc[l])
-'''
 
+
+
+def pivotid(df1, l, n1, n2): #n1 n2 before and after candle l
+    if l-n1 < 0 or l+n2 >= len(df1):
+        return 0
+    
+    pividlow=1
+    pividhigh=1
+    for i in range(l-n1, l+n2+1):
+        if(df1.Low[l]>df1.Low[i]):
+            pividlow=0
+        if(df1.High[l]<df1.High[i]):
+            pividhigh=0
+    if pividlow and pividhigh:
+        return 3
+    elif pividlow:
+        return 1
+    elif pividhigh:
+        return 2
+    else:
+        return 0
+    
+def pointpos(x):
+    if x['pivot']==1:
+        return x['Low']-1e-3
+    elif x['pivot']==2:
+        return x['High']+1e-3
+    else:
+        return np.nan
+
+df['pivot'] = df.apply(lambda x: pivotid(df, x.name,10,10), axis=1)
+df['pointpos'] = df.apply(lambda row: pointpos(row), axis=1)
+
+
+print("Supports:")
+for item in supportList:
+    print(item)
+print("Resistances:")
+print(resistanceList)
 
 print(len(closeToResistance))
+
+dfpl = df
+
+fig = go.Figure(data=[go.Candlestick(x=dfpl.index,
+                open=dfpl['Open'],
+                high=dfpl['High'],
+                low=dfpl['Low'],
+                close=dfpl['Close'])])
+
+fig.update_layout(
+    autosize=False,
+    width=1000,
+    height=800, 
+    paper_bgcolor='black',
+    plot_bgcolor='black')
+fig.update_xaxes(gridcolor='black')
+fig.update_yaxes(gridcolor='black')
+fig.add_scatter(x=dfpl.index, y=dfpl['pointpos'], mode="markers",
+                marker=dict(size=8, color="MediumPurple"),
+                name="Signal")
+#fig.show()
+
+
+
+dfpl = df
+fig = go.Figure(data=[go.Candlestick(x=dfpl.index,
+                open=dfpl['Open'],
+                high=dfpl['High'],
+                low=dfpl['Low'],
+                close=dfpl['Close'],
+                increasing_line_color= 'green', 
+                decreasing_line_color= 'red')])
+
+fig.add_scatter(x=dfpl.index, y=dfpl['pointpos'], mode="markers",
+                marker=dict(size=5, color="MediumPurple"),
+                name="pivot")
+fig.update_layout(xaxis_rangeslider_visible=False)
+fig.update_xaxes(showgrid=False)
+fig.update_yaxes(showgrid=False)
+fig.update_layout(paper_bgcolor='black', plot_bgcolor='black')
+
+#fig.show()
+
+dfkeys = df[:]
+
+# Filter the dataframe based on the pivot column
+high_values = dfkeys[dfkeys['pivot'] == 2]['High']
+low_values = dfkeys[dfkeys['pivot'] == 1]['Low']
+
+# Define the bin width
+bin_width = 0.003  # Change this value as needed
+
+# Calculate the number of bins
+bins = int((high_values.max() - low_values.min()) / bin_width)
+
+# Create the histograms
+plt.figure(figsize=(10, 5))
+plt.hist(high_values, bins=bins, alpha=0.5, label='High Values', color='red')
+plt.hist(low_values, bins=bins, alpha=0.5, label='Low Values', color='blue')
+
+plt.xlabel('Value')
+plt.ylabel('Frequency')
+plt.title('Histogram of High and Low Values')
+plt.legend()
+#plt.show()
+
+def check_candle_signal_plot(l, n1, n2, backCandles, df, proximity):
+    ss = []
+    rr = []
+    for subrow in range(l-backCandles, l-n2):
+        if support(df, subrow, n1, n2):
+            ss.append(df.Low[subrow])
+        if resistance(df, subrow, n1, n2):
+            rr.append(df.High[subrow])
+    
+    ss.sort() #keep lowest support when popping a level
+    i = 0
+    while i < len(ss)-1:
+        if abs(ss[i]-ss[i+1]) <= proximity:
+            # ss[i] = (ss[i]+ss[i+1])/2
+            # del ss[i+1]
+            del ss[i+1]
+        else:
+            i+=1
+
+    rr.sort(reverse=True) # keep highest resistance when popping one
+    i = 0
+    while i < len(rr)-1:
+        if abs(rr[i]-rr[i+1]) <= proximity:
+            #rr[i] = (rr[i]+rr[i+1])/2
+            #del rr[i+1]
+            del rr[i]
+        else:
+            i+=1
+
+    dfpl=df[l-backCandles-n1:l+n2+50]
+    fig = go.Figure(data=[go.Candlestick(x=dfpl.index,
+                open=dfpl['Open'],
+                high=dfpl['High'],
+                low=dfpl['Low'],
+                close=dfpl['Close'])])
+
+    c=0
+    while (1):
+        if(c>len(ss)-1 ):
+            break
+        fig.add_shape(type='line', x0=l-backCandles-n1, y0=ss[c],
+                    x1=l,
+                    y1=ss[c],
+                    line=dict(color="MediumPurple",width=2), name="Support"
+                    )
+        c+=1
+
+    c=0
+    while (1):
+        if(c>len(rr)-1 ):
+            break
+        fig.add_shape(type='line', x0=l-backCandles-n1, y0=rr[c],
+                    x1=l,
+                    y1=rr[c],
+                    line=dict(color="Red",width=2), name="Resistance"
+                    )
+        c+=1    
+
+    # fig.add_scatter(x=dfpl.index, y=dfpl['pointpos'], mode="markers",
+    #             marker=dict(size=5, color="MediumPurple"),
+    #             name="Signal")
+
+    fig.update_layout(
+    autosize=False,
+    width=1000,
+    height=800,)
+    
+    fig.show()
+ 
+ 
+    #----------------------------------------------------------------------
+    cR = closeResistance(l, rr, 150e-5, dfpl)
+    cS = closeSupport(l, ss, 150e-5, dfpl)
+    #print(cR, is_below_resistance(l,6,cR, dfpl))
+    if (cR and is_below_resistance(l,6,cR, dfpl) ):#and df.RSI[l]>65
+        return 1
+    elif(cS and is_above_support(l,6,cS,dfpl) ):#and df.RSI[l]<35
+        return 2
+    else:
+        return 0
+
+check_candle_signal_plot(231, 4,4,100,df,0.02)
 
 print("Program ended.")
