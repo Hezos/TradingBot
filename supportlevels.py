@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 print("Program started")
 
-df = yf.download("VET", start="2023-04-01", end="2024-12-10",  interval = "1d")
+df = yf.download("TEF", start="2024-02-02", end="2024-12-30",  interval = "1d")
 df=df[df['Volume']!=0]
 df.reset_index(drop=True, inplace=True)
 df.isna().sum()
@@ -323,6 +323,23 @@ def check_candle_signal_plot(l, n1, n2, backCandles, df, proximity):
     else:
         return 0
 
-check_candle_signal_plot(231, 4,4,100,df,0.02)
+check_candle_signal_plot(220, 4,4,80,df,0.02)
+
+from tradingview_ta import TA_Handler, Interval, Exchange
+import tradingview_ta
+
+
+
+tesla = TA_Handler(
+    symbol="TSLA",
+    screener="america",
+    exchange="NASDAQ",
+    interval=Interval.INTERVAL_1_DAY
+)
+#print(tesla.get_analysis().indicators)
+print(tesla.get_analysis().oscillators)
+ticker = yf.Ticker('MSFT')
+print(ticker.option_chain())
+
 
 print("Program ended.")
