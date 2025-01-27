@@ -16,4 +16,7 @@ ticker = yf.Ticker('MSFT')
 
 ticker = yf.download('MSFT',start='2024-12-05', end='2025-01-24')
 
-print(ta.trend.AroonIndicator(ticker['High'],ticker['Low']).aroon_down())
+ticker["Adown"] = ta.trend.AroonIndicator(ticker['High'],ticker['Low']).aroon_down()
+ticker["Aup"] = ta.trend.AroonIndicator(ticker['High'],ticker['Low']).aroon_up()
+ticker["Aroon"] = ta.trend.AroonIndicator(ticker['High'],ticker['Low']).aroon_indicator()
+print(ticker)
