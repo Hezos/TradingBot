@@ -1,25 +1,35 @@
 import random
 
 POPULATION_SIZE = 100
-GENOME_LENGHT = 5
+GENOME_LENGHT = 3
 MUTATION_RATE = 0.01
 CROSSOVER_RATE = 0.7
 GENERATIONS = 50
 
+class GenomeModel:
+    def __init__(self, RSI, Aup, Adown):
+        self.RSI = RSI
+        self.Aup = Aup
+        self.Adown = Adown
+
+
 #Generating a genome
-def random_genome():
+def make_genome(RSI, Aup, Adown):
     #genome = [random.randint(0,100) for _ in range(GENOME_LENGHT)]
     genome = []
     genome.append(random.randint(0,100))
     genome.append(-1 * random.randint(0,100))
     genome.append(random.randint(0,100))
-    genome.append(random.randint(0,100))
-    genome.append(random.randint(0,100))
     return genome
 
 #Initial population
-def init_population(population_size, genome_length):
-    return [random_genome() for _ in range(population_size)]
+def init_population(population_size, genome_length, Data):
+    population = []
+#    for i in range(0,population_size):
+#        population.append(make_genome(Data[i].RSI, Data[i].Aup, Data[i].Adown))
+    for i in range(0, population_size):
+        population.append(make_genome(0,0,0))
+    return population
 
 #Calculating the fitness function
 def fitness(genome):
@@ -49,7 +59,11 @@ def mutate(genome):
     return genome
 
 def genetic_algorithm():
-    population = init_population(POPULATION_SIZE, GENOME_LENGHT)
+    Data =[]
+    Data.append(GenomeModel(20,90,10))
+    Data.append(GenomeModel(40,40,45))
+    Data.append(GenomeModel(60,23,92))
+    population = init_population(POPULATION_SIZE, GENOME_LENGHT, Data)
     for generation in range(GENERATIONS):
         fitness_values = [fitness(genome) for genome in population]
         new_population = []
