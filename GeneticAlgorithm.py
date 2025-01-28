@@ -1,20 +1,31 @@
 import random
 
 POPULATION_SIZE = 100
-GENOME_LENGHT = 20
+GENOME_LENGHT = 5
 MUTATION_RATE = 0.01
 CROSSOVER_RATE = 0.7
-GENERATIONS = 200
+GENERATIONS = 50
 
-def random_genome(length):
-    return [random.randint(0,1) for _ in range(length)]
+#Generating a genome
+def random_genome():
+    #genome = [random.randint(0,100) for _ in range(GENOME_LENGHT)]
+    genome = []
+    genome.append(random.randint(0,100))
+    genome.append(-1 * random.randint(0,100))
+    genome.append(random.randint(0,100))
+    genome.append(random.randint(0,100))
+    genome.append(random.randint(0,100))
+    return genome
 
+#Initial population
 def init_population(population_size, genome_length):
-    return [random_genome(genome_length) for _ in range(population_size)]
+    return [random_genome() for _ in range(population_size)]
 
+#Calculating the fitness function
 def fitness(genome):
     return sum(genome)
 
+#Selecting a parent randomly
 def select_parent(population, fitness_values):
     total_fitness = sum(fitness_values)
     pick = random.uniform(0,total_fitness)
@@ -34,7 +45,7 @@ def crossover(parent1, parent2):
 def mutate(genome):
     for i in range(len(genome)):
         if random.random() < MUTATION_RATE:
-            genome[i] = abs(genome[i] - 1)
+            genome[0] -= 10
     return genome
 
 def genetic_algorithm():
@@ -58,4 +69,3 @@ def genetic_algorithm():
     print(f'Best fitness: {fitness(best_solution)}')
 
 genetic_algorithm()
-        
