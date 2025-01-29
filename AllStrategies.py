@@ -4,6 +4,7 @@ import yfinance as yf
 import ta
 from stockstats import wrap
 import stockstats
+from ta.volatility import BollingerBands
 
 stock = TA_Handler(
     symbol="MSFT",
@@ -16,12 +17,17 @@ print(stock.get_indicators()['EMA200'])
 ticker = yf.Ticker('MSFT')
 #print(ticker.option_chain())
 
-ticker = yf.download('MSFT',start='2025-1-05', end='2025-01-28')
+ticker = yf.download('MSFT',start='2024-12-05', end='2025-01-28')
 info = wrap(ticker)
+info = ticker.dropna()
 #ticker["Adown"] = ta.trend.AroonIndicator(ticker['High'],ticker['Low']).aroon_down()
 #ticker["Aup"] = ta.trend.AroonIndicator(ticker['High'],ticker['Low']).aroon_up()
 #ticker["Aroon"] = ta.trend.AroonIndicator(ticker['High'],ticker['Low']).aroon_indicator()
 #print(ticker)
 #print(info['macdh'].tail(10))
+indicator_bb = BollingerBands(close=info['close'],window=20,window_dev=2)
+info['bb_bbh'] = indicator_bb.bollinger_hband()
+info['bb_bbl'] = indicator_bb.bollinger_lband()
+print(info)
 #data = stockstats.StockDataFrame._get_ema(info,stockstats._Meta('Close))
 #print(data)
