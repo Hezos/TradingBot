@@ -5,6 +5,9 @@ import ta
 from stockstats import wrap
 import stockstats
 from ta.volatility import BollingerBands
+import pandas as pd
+from sklearn import linear_model
+
 
 stock = TA_Handler(
     symbol="MSFT",
@@ -12,8 +15,8 @@ stock = TA_Handler(
     exchange="NASDAQ",
     interval=Interval.INTERVAL_1_DAY
 )
-print(stock.get_analysis().indicators['MACD.macd'])
-print(stock.get_indicators()['EMA200'])
+#print(stock.get_analysis().indicators['MACD.macd'])
+#print(stock.get_indicators()['EMA200'])
 ticker = yf.Ticker('MSFT')
 #print(ticker.option_chain())
 
@@ -28,6 +31,16 @@ info = ticker.dropna()
 indicator_bb = BollingerBands(close=info['close'],window=20,window_dev=2)
 info['bb_bbh'] = indicator_bb.bollinger_hband()
 info['bb_bbl'] = indicator_bb.bollinger_lband()
-print(info)
+#print(info)
 #data = stockstats.StockDataFrame._get_ema(info,stockstats._Meta('Close))
 #print(data)
+
+#regression:
+X = info[["open", "low", "high"]]
+y = info["close"]
+
+regression = linear_model.LinearRegression()
+regression.fit(X,y)
+
+predicted = regression.predict([[470,450,490]])
+print(predicted, regression.coef_)
