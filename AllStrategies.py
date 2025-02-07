@@ -10,18 +10,20 @@ from sklearn import linear_model
 import pandas_ta
 
 stock = TA_Handler(
-    symbol="MSFT",
+    symbol="MRVI",
     screener="america",
     exchange="NASDAQ",
     interval=Interval.INTERVAL_1_DAY
 )
-#print(stock.get_analysis().indicators['MACD.macd'])
+print(stock.get_analysis().indicators['MACD.macd'])
+print(stock.get_analysis().indicators['MACD.signal'])
 #print(stock.get_indicators()['EMA200'])
-ticker = yf.Ticker('MSFT')
+ticker = yf.Ticker('MRVI')
 #print(ticker.option_chain())
 
-ticker = yf.download('MSFT',start='2024-12-05', end='2025-01-28')
+ticker = yf.download('LFLY',start='2024-12-05', end='2025-02-05')
 info = ticker.dropna()
+#https://pypi.org/project/stockstats/
 info = wrap(ticker)
 #ticker["Adown"] = ta.trend.AroonIndicator(ticker['High'],ticker['Low']).aroon_down()
 #ticker["Aup"] = ta.trend.AroonIndicator(ticker['High'],ticker['Low']).aroon_up()
@@ -31,12 +33,12 @@ info = wrap(ticker)
 indicator_bb = BollingerBands(close=info['close'],window=20,window_dev=2)
 info['bb_bbh'] = indicator_bb.bollinger_hband()
 info['bb_bbl'] = indicator_bb.bollinger_lband()
-MACDcomponent = info['macd']
-#print(MACDcomponent)
+MACDcomponent = info[['macd', 'macds','macdh']]
+
+#print(f"Historical:{MACDcomponent}")
 #data = stockstats.StockDataFrame._get_ema(info,stockstats._Meta('Close))
 #print(data)
-
-print(info['close_10_lrma'])
+#print(info['close_10_lrma'])
 
 #regression:
 X = info[["open", "low", "high"]]
