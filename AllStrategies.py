@@ -13,7 +13,7 @@ stock = TA_Handler(
     symbol="MRVI",
     screener="america",
     exchange="NASDAQ",
-    interval=Interval.INTERVAL_1_DAY
+    interval=Interval.INTERVAL_1_MINUTE
 )
 print(stock.get_analysis().indicators['MACD.macd'])
 print(stock.get_analysis().indicators['MACD.signal'])
