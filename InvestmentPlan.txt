@@ -1,0 +1,25 @@
+Use MACD + EMA200
+Use the SMA graphs from tradingview.com, with RSI to support the intersection points
+Use linear regression to determine prices
+Use DOE on indecies ANOVA and T-test for index impact check
+Use Survival analysis on falling prices
+Listen to analysist, on how high a stock would go
+Use the greek letters for option trading
+
+CHOCH:
+
+Scenario1:
+High Low HH HL HH Low LH --> Sell
+
+Scenario2:
+High Low HH HL LH Low --> Buy
+
+DON'T BE GREEDY!!!!!!!!!!!!!!!!
+
+How not to:
+Shady graphs: zigzag, potentially went too high on the price
+
+Stock list: SCX PERI CXAI TORO GWH POWW NEXN PCYO CSAN SATX OTC RZLV SCHYF BTDPF WRFRF CAZGF EGY HGBL IMPP GPRK CNDT EBR ITUB GLASF CNL ACTG UAMY
+    NEOV KULR LFLY
+
+Look out for: MUX PERI
