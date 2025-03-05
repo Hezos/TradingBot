@@ -1,5 +1,7 @@
 #This file was created to copy data from tradinview.com by hand and then do calculations with that data
 SandPdirection = input("The direction of the S&P500\n")
+beta = input("The beta of the stock:\n")
+suggestion = input("Did analysts suggest buying? (y/n)\n")
 isnewsaffected = input("Did you read any news for this day? Yes or no? (y/n)\n")
 currentprice = input("The stock price:\n")
 linearregressionslope = input("The direction of the linear regression slope (The higher number the higher the accelaration):\n")
