@@ -1,43 +1,46 @@
 #This file was created to copy data from tradinview.com by hand and then do calculations with that data
 import pandas as pd
 from sklearn import linear_model
+import json
 
-samples = int(input("How many samples do you want to register?\n"))
 
 class StockInfo:
-    def __init__(self, SandPdirection, beta, suggestion, isnewsaffected, currentprice, linearregressionslope, leastsquaresmovingaveragedirection,
-        linearregressionaccuarity, closestsupportlevel, fiftytwoweeklow, SMAcross, RSI, MACDline, MACDsignal, bollingerbands, EMA):
-        this.SandPdirection = SandPdirection
-        this.beta = beta
-        this.suggestion = suggestion
-        this.isnewsaffected = isnewsaffected
-        this.currentprice = currentprice
-        this.linearregressionslope = linearregressionslope
-        this.leastsquaresmovingaveragedirection = leastsquaresmovingaveragedirection
-        this.linearregressionaccuarity = linearregressionaccuarity
-        this.closestsupportlevel = closestsupportlevel
-        this.fiftytwoweeklow = fiftytwoweeklow
-        this.SMAcross = SMAcross
-        this.RSI = RSI
-        this.MACDline = MACDline
-        this.MACDsignal = MACDsignal
-        this.bollingerbands = bollingerbands
-        this.EMA = EMA
+        SandPdirection = 0
+        beta = 0
+        suggestion = 'n'
+        isnewsaffected = 'n'
+        currentprice = 0
+        linearregressionslope = 0
+        leastsquaresmovingaveragedirection = 0
+        linearregressionaccuarity = 0
+        closestsupportlevel = 0
+        fiftytwoweeklow = 0
+        SMAcross = 'n'
+        RSI = 0
+        MACDline = 0
+        MACDsignal = 0
+        bollingerbands = 0
+        EMA = 0
+        def __str__(self):
+            return json.dump(self)
 
-class Refined:
-    def __init__(self, SandP, analystrating, affected, linearregslope, linearregline, levelsupport, movingaveragecross, relativestrength, MACDcross, bollinger,
-         EMAsign):
-        this.SandP = SandP
-        this.analystrating = analystrating
-        this.affected = affected
-        this.linearregslope = linearregslope
-        this.linearregline
-        this.levelsupport
-        this.movingaveragecross = movingaveragecross
-        this.relativestrength = relativestrength
-        this.MACDcross = MACDcross
-        this.bollinger = bollinger
-        this.EMAsign = EMAsign
+    
+class Refined: 
+    SandP = 0
+    analystrating = 0
+    affected = 0
+    linearregslope = 0
+    linearregline = 0
+    levelsupport = 0
+    movingaveragecross = 0
+    relativestrength = 0
+    MACDcross = 0
+    bollinger = 0
+    EMAsign = 0
+    
+'''
+
+samples = int(input("How many samples do you want to register?\n"))
 
 
 infos = []
@@ -69,7 +72,7 @@ for info in infos:
     ref = Refined()
     ref.SandP = 0
     #Use DOE (Design Of Experiments later to correct the numbers which were embeded here)
-    if info.SandPdirection < 0 and beta < 0.4:
+    if info.SandPdirection < 0 and info.beta > 0.4:
         print("Not woth buying.")
         break
     else:
@@ -111,9 +114,40 @@ for info in infos:
         break
     
     refineds.append(ref)
+'''
 
-data = pd.DataFrame(refineds, ignore_index=True)
+#testing class conversion to dataframe:
+myrefind = Refined()
+myrefind.SandP = 10
+myrefind.analystrating = 20
+myrefind.affected = 25
+myrefind.linearregslope = 40
+myrefind.linearregline = 5
+myrefind.levelsupport = 31
+myrefind.movingaveragecross = 53
+myrefind.relativestrength = 24
+myrefind.MACDcross = 14
+myrefind.bollinger = 15
+myrefind.EMAsign = 62
+
+refinds = []
+for i in range(0,3):
+    refinds.append(myrefind)
+
+'''
+data = pd.DataFrame(data= myrefind.__dict__, index=[0,1,2,3,4,5])
+print(data)
+'''
+
+dataDictionaries = []
+for item in refinds:
+    dataDictionaries.append(item.__dict__)
+
+#index is just a placeholder to have an index field.
+data = pd.DataFrame(data= dataDictionaries, index=[0,1,2])
+print(data)
 regression = linear_model.LinearRegression()
 #regression.fit(X,y)
 
 print("Linear regression samples have been created.")
+#print(data)
