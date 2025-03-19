@@ -2,7 +2,7 @@
 import pandas as pd
 from sklearn import linear_model
 import json
-
+import random
 
 class StockInfo:
         SandPdirection = 0
@@ -116,23 +116,24 @@ for info in infos:
     refineds.append(ref)
 '''
 
-#testing class conversion to dataframe:
-myrefind = Refined()
-myrefind.SandP = 10
-myrefind.analystrating = 20
-myrefind.affected = 25
-myrefind.linearregslope = 40
-myrefind.linearregline = 5
-myrefind.levelsupport = 31
-myrefind.movingaveragecross = 53
-myrefind.relativestrength = 24
-myrefind.MACDcross = 14
-myrefind.bollinger = 15
-myrefind.EMAsign = 62
-
 refinds = []
-for i in range(0,3):
+
+for i in range(0, 3):
+    #testing class conversion to dataframe:
+    myrefind = Refined()
+    myrefind.SandP = random.randrange(1,10)
+    myrefind.analystrating = random.randrange(1,20)
+    myrefind.affected = random.randrange(1,25)
+    myrefind.linearregslope = random.randrange(1,40)
+    myrefind.linearregline = random.randrange(1,5)
+    myrefind.levelsupport = random.randrange(1,31)
+    myrefind.movingaveragecross = random.randrange(1,53)
+    myrefind.relativestrength = random.randrange(1,24)
+    myrefind.MACDcross = random.randrange(1,14)
+    myrefind.bollinger = random.randrange(1,15)
+    myrefind.EMAsign = random.randrange(1,62)
     refinds.append(myrefind)
+
 
 '''
 data = pd.DataFrame(data= myrefind.__dict__, index=[0,1,2,3,4,5])
@@ -147,7 +148,16 @@ for item in refinds:
 data = pd.DataFrame(data= dataDictionaries, index=[0,1,2])
 print(data)
 regression = linear_model.LinearRegression()
-#regression.fit(X,y)
+
+y=pd.DataFrame(data=[random.randrange(1,10),random.randrange(1,10),random.randrange(1,10)], index=[0,1,2])
+regression.fit(data,y)
+
+print(regression.coef_)
+randoms = []
+for i in range(0, 11):
+    randoms.append(random.randrange(0,30))
+print(regression.predict([randoms]))
+
 
 print("Linear regression samples have been created.")
 #print(data)
