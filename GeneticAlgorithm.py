@@ -6,7 +6,9 @@ POPULATION_SIZE = 100
 GENOME_LENGHT = 3
 MUTATION_RATE = 0.01
 CROSSOVER_RATE = 0.7
-GENERATIONS = 50
+RegressionCount = 5
+ColumnCount = 11
+GENERATIONS = RegressionCount * ColumnCount
 
 #Use the refined model
 class GenomeModel:
@@ -25,6 +27,28 @@ class GenomeModel:
     MACDcross = 0
     bollinger = 0
     EMAsign = 0
+    predicted = 0
+    actual = 0
+
+def MakeRandomGeneration():
+    genomes = []
+    for i in range(0, 10):
+        genome = GenomeModel(0,0,0)
+        genome.SandP = random.randint(0,100)
+        genome.analystrating = random.randint(0,100)
+        genome.affected = random.randint(0,100)
+        genome.linearregslope = random.randint(0,100)
+        genome.linearregline = random.randint(0,100)
+        genome.levelsupport = random.randint(0,100)
+        genome.movingaveragecross = random.randint(0,100)
+        genome.relativestrength = random.randint(0,100)
+        genome.MACDcross = random.randint(0,100)
+        genome.bollinger = random.randint(0,100)
+        genome.EMAsign = random.randint(0,100)
+        genome.predicted = random.randint(0,100)
+        genome.actual = random.randint(0,100)
+        genomes.append(genome)
+    return genomes
 
 
 #Generating a genome
@@ -34,17 +58,8 @@ def make_genome(RefindeGenome:Refined):
 '''
 
 def make_genome(RSI, Aup, Adown):
-    return GenomeModel(RSI, Aup, Adown);
+    return GenomeModel(RSI, Aup, Adown)
 
-
-#Generating a genome with random data
-def make_random_genome(RSI, Aup, Adown):
-    #genome = [random.randint(0,100) for _ in range(GENOME_LENGHT)]
-    genome = []
-    genome.append(random.randint(0,100))
-    genome.append(-1 * random.randint(0,100))
-    genome.append(random.randint(0,100))
-    return genome
 
 #Initial population
 def init_population(population_size, genome_length, Data):
@@ -55,19 +70,13 @@ def init_population(population_size, genome_length, Data):
         population.append(make_genome(0,0,0))
     return population
 
-def errorFitness(predicteds:[], actuals:[]):
-    sum_error = 0
-    for i in range(0, len(predicteds)):
-        sum_error += (abs((predicteds[i] - actuals[i])) / actuals)
-    return sum_error/len(predicteds)
-
 #Calculating the fitness function
 def fitness(genome):
-    return genome.RSI + genome.Aup + genome.Adown
+    return abs(genome.predicted - genome.actual) / genome.actual
 
 #Selecting a parent randomly
 def select_parent(population, fitness_values):
-    return population[random.randint(0,1)]
+    return population[random.randint(0,5)]
 
 #crossover, change trigger condition later!
 def crossover(parent1, parent2):
@@ -78,7 +87,7 @@ def crossover(parent1, parent2):
     return parent1, parent2
 
 def mutate(genome):
-    genome.RSI += MUTATION_RATE
+    #we only want crossovers for now
     return genome
 
 def genetic_algorithm():
@@ -88,10 +97,11 @@ def genetic_algorithm():
     Data.append(GenomeModel(40,40,45))
     Data.append(GenomeModel(60,23,92))
     #creating innitial population
-    population = init_population(POPULATION_SIZE, GENOME_LENGHT, Data)
+    #population = init_population(POPULATION_SIZE, GENOME_LENGHT, Data)
+    population = MakeRandomGeneration()
     #looping throught generations
     for generation in range(GENERATIONS):
-        #calculating fitness values
+        #calculating fitness values change firness to errorfitness later!
         fitness_values = []
         for genome in population:
             fitness_values.append(fitness(genome))
@@ -106,11 +116,11 @@ def genetic_algorithm():
         population = new_population
         #collecting fitness values.
         fitness_values = [fitness(genome) for genome in population]
-        best_fitness = max(fitness_values)
+        best_fitness = min(fitness_values)
         #best fitness in the current generation
         print(f"{generation}:Best Fitness = {best_fitness}")
     #best found genomes
-    best_index = fitness_values.index(max(fitness_values))
+    best_index = fitness_values.index(min(fitness_values))
     best_solution = population[best_index]
     print(f'Best Solution: {best_solution}')
     print(f'Best fitness: {fitness(best_solution)}')
