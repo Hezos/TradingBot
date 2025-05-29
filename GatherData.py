@@ -151,11 +151,12 @@ regression = linear_model.LinearRegression()
 
 y=pd.DataFrame(data=[random.randrange(1,10),random.randrange(1,10),random.randrange(1,10)], index=[0,1,2])
 regression.fit(data,y)
-
 print(regression.coef_)
+#Using random values for testing, change to actual later!
 randoms = []
 for i in range(0, 11):
     randoms.append(random.randrange(0,30))
 print(regression.predict([randoms]))
-
+with open("LinearRegressionData.txt", "w") as f:
+    f.write(json.dumps(regression.coef_.__str__()))
 print("Linear regression samples have been created.")
