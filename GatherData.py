@@ -37,9 +37,9 @@ class Refined:
     MACDcross = 0
     bollinger = 0
     EMAsign = 0
-    
-'''
 
+
+'''
 samples = int(input("How many samples do you want to register?\n"))
 
 
@@ -158,6 +158,4 @@ for i in range(0, 11):
     randoms.append(random.randrange(0,30))
 print(regression.predict([randoms]))
 
-
 print("Linear regression samples have been created.")
-#print(data)
