@@ -1,6 +1,7 @@
 #This file was created to copy data from tradinview.com by hand and then do calculations with that data
 import pandas as pd
 from sklearn import linear_model
+from sklearn.preprocessing import PolynomialFeatures
 import json
 import random
 
@@ -147,16 +148,27 @@ for item in refinds:
 #index is just a placeholder to have an index field.
 data = pd.DataFrame(data= dataDictionaries, index=[0,1,2])
 print(data)
+polynomialfeatures = PolynomialFeatures(degree=3, include_bias=False)
+X_polinomial = polynomialfeatures.fit_transform(data)
 regression = linear_model.LinearRegression()
 
+#y=pd.DataFrame(data=[random.randrange(1,10),random.randrange(1,10),random.randrange(1,10)], index=[0,1,2])
+#regression.fit(data,y)
 y=pd.DataFrame(data=[random.randrange(1,10),random.randrange(1,10),random.randrange(1,10)], index=[0,1,2])
-regression.fit(data,y)
+regression.fit(X_polinomial,y)
+
 print(regression.coef_)
 #Using random values for testing, change to actual later!
 randoms = []
+#for i in range(0, regression.n_features_in_):
 for i in range(0, 11):
     randoms.append(random.randrange(0,30))
-print(regression.predict([randoms]))
+#print(regression.predict([randoms]))
+print(regression.predict(polynomialfeatures.transform([randoms])))
+
 with open("LinearRegressionData.txt", "w") as f:
     f.write(json.dumps(regression.coef_.__str__()))
 print("Linear regression samples have been created.")
+#Does let me change coefficiants directly
+#regression.coef_[0][0] = 1
+#print(regression.coef_[0][0])

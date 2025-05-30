@@ -30,6 +30,15 @@ class GenomeModel:
     predicted = 0
     actual = 0
 
+parent2 = GenomeModel(0,0,0)
+parent2.actual = 1
+
+def GenerateIndexMatrix(genomes:[]):
+    print("Generating index matrix.")
+    IndexMatrix = []
+
+
+
 def MakeRandomGeneration():
     genomes = []
     for i in range(0, 10):
@@ -74,16 +83,87 @@ def init_population(population_size, genome_length, Data):
 def fitness(genome):
     return abs(genome.predicted - genome.actual) / genome.actual
 
-#Selecting a parent randomly
-def select_parent(population, fitness_values):
-    return population[random.randint(0,5)]
-
 #crossover, change trigger condition later!
-def crossover(parent1, parent2):
-    if random.random() < CROSSOVER_RATE:
-        temp = parent1
-        parent1.SandP = parent2.SandP
-        parent2.SandP = temp.SandP
+def crossover(population, fitness_values):
+    parent1 = population[0]
+    parent1 = population[0]
+    for i in range(0, len(population)):
+        for j in range(0, len(population)):
+            if(i != j):
+                #Do not hardcode numbers, use percentages instead!
+                if(abs(population[i].RSI - population[j].RSI) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.RSI = parent2.RSI
+                    parent2.RSI = population[i].RSI            
+                    #break
+                if(abs(population[i].SandP - population[j].SandP) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.SandP = parent2.SandP
+                    parent2.SandP = population[i].SandP            
+                    #break
+                if(abs(population[i].analystrating - population[j].analystrating) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.analystrating = parent2.analystrating
+                    parent2.analystrating = population[i].analystrating            
+                    #break
+                if(abs(population[i].affected - population[j].affected) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.affected = parent2.affected
+                    parent2.affected = population[i].affected            
+                    #break
+                if(abs(population[i].linearregslope - population[j].linearregslope) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.linearregslope = parent2.linearregslope
+                    parent2.linearregslope = population[i].linearregslope            
+                    #break
+                if(abs(population[i].linearregline - population[j].linearregline) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.linearregline = parent2.linearregline
+                    parent2.linearregline = population[i].linearregline            
+                    #break
+                if(abs(population[i].levelsupport - population[j].levelsupport) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.levelsupport = parent2.levelsupport
+                    parent2.levelsupport = population[i].levelsupport            
+                    #break
+                if(abs(population[i].movingaveragecross - population[j].movingaveragecross) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.movingaveragecross = parent2.movingaveragecross
+                    parent2.movingaveragecross = population[i].movingaveragecross            
+                    #break
+                if(abs(population[i].relativestrength - population[j].relativestrength) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.relativestrength = parent2.relativestrength
+                    parent2.relativestrength = population[i].relativestrength            
+                    #break
+                if(abs(population[i].MACDcross - population[j].MACDcross) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.MACDcross = parent2.MACDcross
+                    parent2.MACDcross = population[i].MACDcross            
+                    #break
+                if(abs(population[i].bollinger - population[j].bollinger) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.bollinger = parent2.bollinger
+                    parent2.bollinger = population[i].bollinger            
+                    #break
+                if(abs(population[i].EMAsign - population[j].EMAsign) < 0.11):
+                    parent1 = population[i]
+                    parent2 = population[j]
+                    parent1.EMAsign = parent2.EMAsign
+                    parent2.EMAsign = population[i].EMAsign            
+                    #break
+    #Do a linear regression result recalculation before passing the parents
     return parent1, parent2
 
 def mutate(genome):
@@ -108,9 +188,7 @@ def genetic_algorithm():
         #making a new population
         new_population = []
         for _ in range(POPULATION_SIZE // 2):
-            parent1 = select_parent(population, fitness_values)
-            parent2 = select_parent(population,fitness_values)
-            offspring1, offspring2 = crossover(parent1, parent2)
+            offspring1, offspring2 = crossover(population, fitness_values)
             new_population.extend([mutate(offspring1), mutate(offspring2)])
         #switching old population to the new one
         population = new_population
