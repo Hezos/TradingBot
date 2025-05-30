@@ -119,20 +119,20 @@ for info in infos:
 
 refinds = []
 
-for i in range(0, 3):
+for i in range(0, 4):
     #testing class conversion to dataframe:
     myrefind = Refined()
-    myrefind.SandP = random.randrange(1,10)
-    myrefind.analystrating = random.randrange(1,20)
-    myrefind.affected = random.randrange(1,25)
-    myrefind.linearregslope = random.randrange(1,40)
+    myrefind.SandP = random.randrange(1,5)
+    myrefind.analystrating = random.randrange(1,5)
+    myrefind.affected = random.randrange(1,5)
+    myrefind.linearregslope = random.randrange(1,5)
     myrefind.linearregline = random.randrange(1,5)
-    myrefind.levelsupport = random.randrange(1,31)
-    myrefind.movingaveragecross = random.randrange(1,53)
-    myrefind.relativestrength = random.randrange(1,24)
-    myrefind.MACDcross = random.randrange(1,14)
-    myrefind.bollinger = random.randrange(1,15)
-    myrefind.EMAsign = random.randrange(1,62)
+    myrefind.levelsupport = random.randrange(1,5)
+    myrefind.movingaveragecross = random.randrange(1,5)
+    myrefind.relativestrength = random.randrange(1,5)
+    myrefind.MACDcross = random.randrange(1,5)
+    myrefind.bollinger = random.randrange(1,5)
+    myrefind.EMAsign = random.randrange(1,5)
     refinds.append(myrefind)
 
 
@@ -146,7 +146,7 @@ for item in refinds:
     dataDictionaries.append(item.__dict__)
 
 #index is just a placeholder to have an index field.
-data = pd.DataFrame(data= dataDictionaries, index=[0,1,2])
+data = pd.DataFrame(data= dataDictionaries, index=[0,1,2,3])
 print(data)
 polynomialfeatures = PolynomialFeatures(degree=3, include_bias=False)
 X_polinomial = polynomialfeatures.fit_transform(data)
@@ -154,7 +154,7 @@ regression = linear_model.LinearRegression()
 
 #y=pd.DataFrame(data=[random.randrange(1,10),random.randrange(1,10),random.randrange(1,10)], index=[0,1,2])
 #regression.fit(data,y)
-y=pd.DataFrame(data=[random.randrange(1,10),random.randrange(1,10),random.randrange(1,10)], index=[0,1,2])
+y=pd.DataFrame(data=[random.randrange(1,5),random.randrange(1,5),random.randrange(1,5),random.randrange(1,5)], index=[0,1,2,3])
 regression.fit(X_polinomial,y)
 
 print(regression.coef_)
@@ -162,7 +162,7 @@ print(regression.coef_)
 randoms = []
 #for i in range(0, regression.n_features_in_):
 for i in range(0, 11):
-    randoms.append(random.randrange(0,30))
+    randoms.append(random.randrange(0,1))
 #print(regression.predict([randoms]))
 print(regression.predict(polynomialfeatures.transform([randoms])))
 
@@ -170,5 +170,5 @@ with open("LinearRegressionData.txt", "w") as f:
     f.write(json.dumps(regression.coef_.__str__()))
 print("Linear regression samples have been created.")
 #Does let me change coefficiants directly
-#regression.coef_[0][0] = 1
-#print(regression.coef_[0][0])
+regression.coef_[0][0] = 1
+print(regression.predict(polynomialfeatures.transform([randoms])))

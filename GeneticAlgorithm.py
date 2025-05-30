@@ -55,7 +55,7 @@ def MakeRandomGeneration():
         genome.bollinger = random.randint(0,100)
         genome.EMAsign = random.randint(0,100)
         genome.predicted = random.randint(0,100)
-        genome.actual = random.randint(0,100)
+        genome.actual = random.randint(1,100)
         genomes.append(genome)
     return genomes
 
@@ -85,84 +85,123 @@ def fitness(genome):
 
 #crossover, change trigger condition later!
 def crossover(population, fitness_values):
+    testParent1 = population[0]
+    testParent2 = population[0]
     parent1 = population[0]
-    parent1 = population[0]
+    parent2 = population[0]
     for i in range(0, len(population)):
         for j in range(0, len(population)):
+            didswitch = False
             if(i != j):
                 #Do not hardcode numbers, use percentages instead!
                 if(abs(population[i].RSI - population[j].RSI) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.RSI = parent2.RSI
-                    parent2.RSI = population[i].RSI            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.RSI = testParent2.RSI
+                    testParent2.RSI = population[i].RSI
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2
                 if(abs(population[i].SandP - population[j].SandP) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.SandP = parent2.SandP
-                    parent2.SandP = population[i].SandP            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.SandP = testParent2.SandP
+                    testParent2.SandP = population[i].SandP            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2
                 if(abs(population[i].analystrating - population[j].analystrating) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.analystrating = parent2.analystrating
-                    parent2.analystrating = population[i].analystrating            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.analystrating = testParent2.analystrating
+                    testParent2.analystrating = population[i].analystrating            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2
                 if(abs(population[i].affected - population[j].affected) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.affected = parent2.affected
-                    parent2.affected = population[i].affected            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.affected = testParent2.affected
+                    testParent2.affected = population[i].affected            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2            
                 if(abs(population[i].linearregslope - population[j].linearregslope) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.linearregslope = parent2.linearregslope
-                    parent2.linearregslope = population[i].linearregslope            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.linearregslope = testParent2.linearregslope
+                    testParent2.linearregslope = population[i].linearregslope            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2 
                 if(abs(population[i].linearregline - population[j].linearregline) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.linearregline = parent2.linearregline
-                    parent2.linearregline = population[i].linearregline            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.linearregline = testParent2.linearregline
+                    testParent2.linearregline = population[i].linearregline            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2 
                 if(abs(population[i].levelsupport - population[j].levelsupport) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.levelsupport = parent2.levelsupport
-                    parent2.levelsupport = population[i].levelsupport            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.levelsupport = testParent2.levelsupport
+                    testParent2.levelsupport = population[i].levelsupport            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2   
                 if(abs(population[i].movingaveragecross - population[j].movingaveragecross) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.movingaveragecross = parent2.movingaveragecross
-                    parent2.movingaveragecross = population[i].movingaveragecross            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.movingaveragecross = testParent2.movingaveragecross
+                    testParent2.movingaveragecross = population[i].movingaveragecross            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2
                 if(abs(population[i].relativestrength - population[j].relativestrength) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.relativestrength = parent2.relativestrength
-                    parent2.relativestrength = population[i].relativestrength            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.relativestrength = testParent2.relativestrength
+                    testParent2.relativestrength = population[i].relativestrength            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2            
                 if(abs(population[i].MACDcross - population[j].MACDcross) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.MACDcross = parent2.MACDcross
-                    parent2.MACDcross = population[i].MACDcross            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.MACDcross = testParent2.MACDcross
+                    testParent2.MACDcross = population[i].MACDcross            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2
                 if(abs(population[i].bollinger - population[j].bollinger) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.bollinger = parent2.bollinger
-                    parent2.bollinger = population[i].bollinger            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.bollinger = testParent2.bollinger
+                    testParent2.bollinger = population[i].bollinger            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2
                 if(abs(population[i].EMAsign - population[j].EMAsign) < 0.11):
-                    parent1 = population[i]
-                    parent2 = population[j]
-                    parent1.EMAsign = parent2.EMAsign
-                    parent2.EMAsign = population[i].EMAsign            
-                    #break
+                    testParent1 = population[i]
+                    testParent2 = population[j]
+                    testParent1.EMAsign = testParent2.EMAsign
+                    testParent2.EMAsign = population[i].EMAsign            
+                    if testParent1 in population or testParent2 in population:
+                        break
+                    parent1 = testParent1
+                    parent2 = testParent2
     #Do a linear regression result recalculation before passing the parents
     return parent1, parent2
 
@@ -186,16 +225,15 @@ def genetic_algorithm():
         for genome in population:
             fitness_values.append(fitness(genome))
         #making a new population
-        new_population = []
-        for _ in range(POPULATION_SIZE // 2):
+        for genome in population:
             offspring1, offspring2 = crossover(population, fitness_values)
-            new_population.extend([mutate(offspring1), mutate(offspring2)])
-        #switching old population to the new one
-        population = new_population
+        if offspring1 not in population or offspring2 not in population:
+            population.extend([mutate(offspring1), mutate(offspring2)])
         #collecting fitness values.
         fitness_values = [fitness(genome) for genome in population]
+        #for fitness_v in fitness_values:
+        #    print(fitness_v)
         best_fitness = min(fitness_values)
-        #best fitness in the current generation
         print(f"{generation}:Best Fitness = {best_fitness}")
     #best found genomes
     best_index = fitness_values.index(min(fitness_values))
