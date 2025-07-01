@@ -26,7 +26,9 @@ class StockInfo:
             return json.dump(self)
 
     
-class Refined: 
+class Refined:
+    #Just to let me convert it to dictionary 
+    Index = 0
     SandP = 0
     analystrating = 0
     affected = 0
@@ -38,7 +40,19 @@ class Refined:
     MACDcross = 0
     bollinger = 0
     EMAsign = 0
-
+    def Dictionary(this,indexV):
+        return { "Index" : indexV,
+                "SandP" : this.SandP,
+                "analystrating" : this.analystrating,
+                "affected" : this.affected,
+                "linearregline" : this.linearregline,
+                "levelsupport" : this.levelsupport,
+                 "movingaveragecross" : this.movingaveragecross,
+                "relativestrength" : this.relativestrength,
+                "MACDcross" : this.MACDcross,
+                "bollinger" : this.bollinger,
+                "EMAsign" : this.EMAsign
+     }
 
 '''
 samples = int(input("How many samples do you want to register?\n"))
@@ -47,6 +61,7 @@ samples = int(input("How many samples do you want to register?\n"))
 infos = []
 for i in range(0, samples):
     info = StockInfo()
+    print("\nInfo about the stock:\n")
     info.SandPdirection = float(input("The direction of the S&P500\n"))
     info.beta = float(input("The beta of the stock:\n"))
     info.suggestion = input("Did analysts suggest buying? (y/n)\n")
@@ -57,7 +72,7 @@ for i in range(0, samples):
     info.linearregressionaccuarity = float(input("The accuarity of the linear regression:\n"))
     info.closestsupportlevel = float(input("The closest support level:\n"))
     info.fiftytwoweeklow = float(input("The 52 week low:\n"))
-    info.SMAcross = input("Did the SMA200and50 cross?\n")
+    info.SMAcross = input("Did the SMA200and50 cross?(y/n)\n")
     info.RSI = float(input("The RSI value:\n"))
     info.MACDline = float(input("MACD line value:\n"))
     info.MACDsignal = float(input("MACD signal value:\n"))
@@ -133,42 +148,43 @@ for i in range(0, 4):
     myrefind.MACDcross = random.randrange(1,5)
     myrefind.bollinger = random.randrange(1,5)
     myrefind.EMAsign = random.randrange(1,5)
-    refinds.append(myrefind)
+    refinds.append(myrefind.Dictionary(i))
 
 
-'''
-data = pd.DataFrame(data= myrefind.__dict__, index=[0,1,2,3,4,5])
+
+data = pd.DataFrame(data= refinds)
 print(data)
-'''
 
-dataDictionaries = []
-for item in refinds:
-    dataDictionaries.append(item.__dict__)
+def RegressionFunction():
+    dataDictionaries = []
+    for item in refinds:
+        dataDictionaries.append(item.__dict__)
 
-#index is just a placeholder to have an index field.
-data = pd.DataFrame(data= dataDictionaries, index=[0,1,2,3])
-print(data)
-polynomialfeatures = PolynomialFeatures(degree=3, include_bias=False)
-X_polinomial = polynomialfeatures.fit_transform(data)
-regression = linear_model.LinearRegression()
+    #index is just a placeholder to have an index field.
+    data = pd.DataFrame(data= dataDictionaries, index=[0,1,2,3])
+    print(data)
+    polynomialfeatures = PolynomialFeatures(degree=3, include_bias=False)
+    X_polinomial = polynomialfeatures.fit_transform(data)
+    regression = linear_model.LinearRegression()
 
-#y=pd.DataFrame(data=[random.randrange(1,10),random.randrange(1,10),random.randrange(1,10)], index=[0,1,2])
-#regression.fit(data,y)
-y=pd.DataFrame(data=[random.randrange(1,5),random.randrange(1,5),random.randrange(1,5),random.randrange(1,5)], index=[0,1,2,3])
-regression.fit(X_polinomial,y)
+    #y=pd.DataFrame(data=[random.randrange(1,10),random.randrange(1,10),random.randrange(1,10)], index=[0,1,2])
+    #regression.fit(data,y)
+    y=pd.DataFrame(data=[random.randrange(1,5),random.randrange(1,5),random.randrange(1,5),random.randrange(1,5)], index=[0,1,2,3])
+    regression.fit(X_polinomial,y)
 
-print(regression.coef_)
-#Using random values for testing, change to actual later!
-randoms = []
-#for i in range(0, regression.n_features_in_):
-for i in range(0, 11):
-    randoms.append(random.randrange(0,1))
-#print(regression.predict([randoms]))
-print(regression.predict(polynomialfeatures.transform([randoms])))
+    print(regression.coef_)
+    #Using random values for testing, change to actual later!
+    randoms = []
+    #for i in range(0, regression.n_features_in_):
+    for i in range(0, 11):
+        randoms.append(random.randrange(0,1))
+    #print(regression.predict([randoms]))
+    print(regression.predict(polynomialfeatures.transform([randoms])))
 
-with open("LinearRegressionData.txt", "w") as f:
-    f.write(json.dumps(regression.coef_.__str__()))
-print("Linear regression samples have been created.")
-#Does let me change coefficiants directly
-regression.coef_[0][0] = 1
-print(regression.predict(polynomialfeatures.transform([randoms])))
+    with open("LinearRegressionData.txt", "w") as f:
+        f.write(json.dumps(regression.coef_.__str__()))
+    print("Linear regression samples have been created.")
+    #Does let me change coefficiants directly
+    regression.coef_[0][0] = 1
+    print(regression.predict(polynomialfeatures.transform([randoms])))
+#RegressionFunction()
