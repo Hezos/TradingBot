@@ -66,22 +66,13 @@ def make_genome(RefindeGenome:Refined):
     return RefindeGenome
 '''
 
-def make_genome(RSI, Aup, Adown):
-    return GenomeModel(RSI, Aup, Adown)
-
-
-#Initial population
-def init_population(population_size, genome_length, Data):
-    population = []
-#    for i in range(0,population_size):
-#        population.append(make_genome(Data[i].RSI, Data[i].Aup, Data[i].Adown))
-    for i in range(0, population_size):
-        population.append(make_genome(0,0,0))
-    return population
 
 #Calculating the fitness function, change this to a list later
-def fitness(genome):
-    return abs(genome.predicted - genome.actual) / genome.actual
+def fitness(genome, actuals:[]):
+    actualdifference = 0
+    for actual in actuals:
+        actualdifference += abs(genome.predicted - actual) / actual
+    return actualdifference
 
 #crossover, change trigger condition later!
 def crossover(population, fitness_values):
@@ -222,27 +213,25 @@ def mutate(genome):
     return genome
 
 def genetic_algorithm():
-    #generating data
-    Data =[]
-    Data.append(GenomeModel(20,90,10))
-    Data.append(GenomeModel(40,40,45))
-    Data.append(GenomeModel(60,23,92))
     #creating innitial population
     #population = init_population(POPULATION_SIZE, GENOME_LENGHT, Data)
     population = MakeRandomGeneration()
+    Actuals = []
+    for element in population:
+        Actuals.append(element.actual)
     #looping throught generations
     for generation in range(GENERATIONS):
         #calculating fitness values change firness to errorfitness later!
         fitness_values = []
         for genome in population:
-            fitness_values.append(fitness(genome))
+            fitness_values.append(fitness(genome= genome, actuals= Actuals))
         #making a new population
         for genome in population:
             offspring1, offspring2 = crossover(population, fitness_values)
         if offspring1 not in population or offspring2 not in population:
             population.extend([mutate(offspring1), mutate(offspring2)])
         #collecting fitness values.
-        fitness_values = [fitness(genome) for genome in population]
+        fitness_values = [fitness(genome, Actuals) for genome in population]
         #for fitness_v in fitness_values:
         #    print(fitness_v)
         best_fitness = min(fitness_values)
@@ -251,6 +240,6 @@ def genetic_algorithm():
     best_index = fitness_values.index(min(fitness_values))
     best_solution = population[best_index]
     print(f'Best Solution: {best_solution}')
-    print(f'Best fitness: {fitness(best_solution)}')
+    print(f'Best fitness: {fitness(best_solution, Actuals)}')
 
 genetic_algorithm()

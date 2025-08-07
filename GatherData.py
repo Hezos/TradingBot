@@ -155,6 +155,10 @@ for i in range(0, 4):
 data = pd.DataFrame(data= refinds)
 print(data)
 
+def DesignOfExperimentsFunction():
+    #install pyDOE
+    print()
+
 def RegressionFunction():
     dataDictionaries = []
     for item in refinds:
