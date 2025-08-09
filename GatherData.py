@@ -4,6 +4,7 @@ from sklearn import linear_model
 from sklearn.preprocessing import PolynomialFeatures
 import json
 import random
+from pyDOE3 import *
 
 class StockInfo:
         SandPdirection = 0
@@ -156,8 +157,10 @@ data = pd.DataFrame(data= refinds)
 print(data)
 
 def DesignOfExperimentsFunction():
-    #install pyDOE
-    print()
+    print(fullfact([1,2,3,4,5,6,7,8,9,10]))
+    print("\n")
+    print(ff2n(3))
+    
 
 def RegressionFunction():
     dataDictionaries = []
@@ -192,3 +195,4 @@ def RegressionFunction():
     regression.coef_[0][0] = 1
     print(regression.predict(polynomialfeatures.transform([randoms])))
 #RegressionFunction()
+DesignOfExperimentsFunction()
