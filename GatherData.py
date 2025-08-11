@@ -156,10 +156,29 @@ for i in range(0, 4):
 data = pd.DataFrame(data= refinds)
 print(data)
 
-def DesignOfExperimentsFunction():
-    print(fullfact([1,2,3,4,5,6,7,8,9,10]))
-    print("\n")
-    print(ff2n(3))
+def DesignOfExperimentsFunction(factors, randomize=False):
+    design = fullfact([2]*len(factors))
+    design = 2*design - 1
+    df = pd.DataFrame(design, columns=factors)
+    return df
+
+def MainEffects(InputDF, ResultColumnName):
+    factors = [col for col in InputDF.columns if col != ResultColumnName]
+    main_effects = {}
+    for factor in factors:
+        mean_plus = df[df[factor] == 1][ResultColumnName].mean()
+        mean_minus = df[df[factor] == -1][ResultColumnName].mean()
+        main_effects[factor] = mean_plus - mean_minus
+    return main_effects
+
+def GetInfluenceRatios(factors, columnnames):
+    resultArray = []
+    sumValue = 0
+    for name in columnnames:
+        sumValue += factors[name]
+    for name in columnnames:
+        resultArray.append(factors[name] / sumValue)
+    return resultArray
     
 
 def RegressionFunction():
@@ -195,4 +214,13 @@ def RegressionFunction():
     regression.coef_[0][0] = 1
     print(regression.predict(polynomialfeatures.transform([randoms])))
 #RegressionFunction()
-DesignOfExperimentsFunction()
+df = DesignOfExperimentsFunction(['RSI','EMA',"SMA","BBup","BBdown"])
+resultvalues = []
+for i in range(0,32):
+    resultvalues.append(i * random.randrange(0,10))
+df.insert(5,"Result",resultvalues)
+effects = MainEffects(df, "Result")
+df = df.drop("Result", axis='columns')
+print(GetInfluenceRatios(effects, df))
+
+
