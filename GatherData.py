@@ -221,6 +221,23 @@ for i in range(0,32):
 df.insert(5,"Result",resultvalues)
 effects = MainEffects(df, "Result")
 df = df.drop("Result", axis='columns')
-print(GetInfluenceRatios(effects, df))
+InfluenceRatios = []
+for i in range(0, len(resultvalues)):
+    for j in range(0, len(resultvalues)):
+        if i != j:
+            temp = resultvalues[i]
+            resultvalues[i] = resultvalues[j]
+            resultvalues[j] = temp
+            df.insert(5,"Result",resultvalues)
+            temp = df.iloc[i]
+            df.iloc[i] = df.iloc[j]
+            df.iloc[j] = temp
+            effects = MainEffects(df, "Result")
+            df = df.drop("Result", axis='columns')
+            InfluenceRatio = GetInfluenceRatios(effects, df)
+            InfluenceRatios.append(InfluenceRatio)
+with open("InfluenceRationData.txt", "w") as f:
+        f.write(json.dumps(InfluenceRatios))
+print("DOE samples have been created.")
 
 
