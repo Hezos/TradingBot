@@ -66,6 +66,8 @@ def make_genome(RefindeGenome:Refined):
     return RefindeGenome
 '''
 
+def CalculatePredicted():
+    print("This function will calculate the predicted price. Using the average of all indecies.")
 
 #Calculating the fitness function, change this to a list later
 def fitness(genome, actuals:[]):
