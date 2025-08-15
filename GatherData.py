@@ -154,6 +154,8 @@ for i in range(0, 4):
 
 
 data = pd.DataFrame(data= refinds)
+#delete these drops later
+data.drop(["Index", "SandP", "analystrating", "affected","linearregline","levelsupport"],axis="columns")
 print(data)
 
 def DesignOfExperimentsFunction(factors, randomize=False):
@@ -162,12 +164,24 @@ def DesignOfExperimentsFunction(factors, randomize=False):
     df = pd.DataFrame(design, columns=factors)
     return df
 
-def MainEffects(InputDF, ResultColumnName):
+def FactorAverages(data):
+    result = []
+    for col in data.columns:
+        sumValue = 0
+        count = 0
+        for i in range(0, len(data.index)):
+            count += 1
+            sumValue += data[col][i]
+        result.append(sumValue / count)
+    return result
+
+def MainEffects(InputDF, ResultColumnName, factorAverages):
     factors = [col for col in InputDF.columns if col != ResultColumnName]
     main_effects = {}
     for factor in factors:
-        mean_plus = df[df[factor] == 1][ResultColumnName].mean()
-        mean_minus = df[df[factor] == -1][ResultColumnName].mean()
+        averValue = factorAverages[factor][0]
+        mean_plus = df[df[factor] == 1][ResultColumnName].mean() * averValue
+        mean_minus = df[df[factor] == -1][ResultColumnName].mean() * averValue
         main_effects[factor] = mean_plus - mean_minus
     return main_effects
 
@@ -215,13 +229,22 @@ def RegressionFunction():
     print(regression.predict(polynomialfeatures.transform([randoms])))
 #RegressionFunction()
 df = DesignOfExperimentsFunction(['RSI','EMA',"SMA","BBup","BBdown"])
+
+
+factAver = pd.DataFrame( columns= ['RSI','EMA',"SMA","BBup","BBdown"])
+calculatedAverages = FactorAverages(data) 
+for i in range(0, len(factAver.columns)):
+    factAver.loc[0] = calculatedAverages[i]
+
+
 resultvalues = []
 for i in range(0,32):
     resultvalues.append(i * random.randrange(0,10))
 df.insert(5,"Result",resultvalues)
-effects = MainEffects(df, "Result")
+effects = MainEffects(df, "Result", factAver)
 df = df.drop("Result", axis='columns')
 InfluenceRatios = []
+
 for i in range(0, len(resultvalues)):
     for j in range(0, len(resultvalues)):
         if i != j:
@@ -232,12 +255,12 @@ for i in range(0, len(resultvalues)):
             temp = df.iloc[i]
             df.iloc[i] = df.iloc[j]
             df.iloc[j] = temp
-            effects = MainEffects(df, "Result")
+            effects = MainEffects(df, "Result", factAver)
             df = df.drop("Result", axis='columns')
+            #df = df.drop("FactorAverages", axis='columns')
             InfluenceRatio = GetInfluenceRatios(effects, df)
             InfluenceRatios.append(InfluenceRatio)
+print("DOE samples have been created.")
 with open("InfluenceRationData.txt", "w") as f:
         f.write(json.dumps(InfluenceRatios))
-print("DOE samples have been created.")
-
-
+print("DOE samples were saved.")
