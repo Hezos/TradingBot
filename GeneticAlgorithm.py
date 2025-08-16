@@ -66,8 +66,13 @@ def make_genome(RefindeGenome:Refined):
     return RefindeGenome
 '''
 
-def CalculatePredicted():
-    print("This function will calculate the predicted price. Using the average of all indecies.")
+def CalculatePredicted(factorRatios):
+    result = []
+    f = open("FactorAverages.txt")
+    factorAverages = json.loads(f.read())
+    for i in len(0,factorRatios):
+        result.append(factorRatios * factorAverages)
+    return result
 
 #Calculating the fitness function, change this to a list later
 def fitness(genome, actuals:[]):
@@ -211,7 +216,14 @@ def crossover(population, fitness_values):
     return parent1, parent2
 
 def mutate(genome):
-    #we only want crossovers for now
+    #This function is used to calculate the predictions
+    factors = []
+    factors.append(genome.RSI)
+    factors.append(genome.EMAsign)
+    factors.append(genome.movingaveragecross)
+    factors.append(genome.bollinger)
+    factors.append(genome.bollinger)
+    genome.predicted = CalculatePredicted(factors)
     return genome
 
 def genetic_algorithm():

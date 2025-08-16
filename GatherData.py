@@ -167,12 +167,13 @@ def DesignOfExperimentsFunction(factors, randomize=False):
 def FactorAverages(data):
     result = []
     for col in data.columns:
-        sumValue = 0
-        count = 0
-        for i in range(0, len(data.index)):
-            count += 1
-            sumValue += data[col][i]
-        result.append(sumValue / count)
+        if col != "Index":
+            sumValue = 0
+            count = 0
+            for i in range(0, len(data.index)):
+                count += 1
+                sumValue += data[col][i]
+            result.append(sumValue / count)
     return result
 
 def MainEffects(InputDF, ResultColumnName, factorAverages):
@@ -230,11 +231,14 @@ def RegressionFunction():
 #RegressionFunction()
 df = DesignOfExperimentsFunction(['RSI','EMA',"SMA","BBup","BBdown"])
 
-
-factAver = pd.DataFrame( columns= ['RSI','EMA',"SMA","BBup","BBdown"])
-calculatedAverages = FactorAverages(data) 
-for i in range(0, len(factAver.columns)):
-    factAver.loc[0] = calculatedAverages[i]
+columnNames = ['RSI','EMA',"SMA","BBup","BBdown"]
+factAver = pd.DataFrame(columnNames)
+calculatedAverages = FactorAverages(data)
+with open("FactorAverages.txt", "w") as f:
+        f.write(json.dumps(calculatedAverages))
+print("Averages of factors were saved.")
+for i in range(0, len(columnNames)): 
+    factAver.insert(i, columnNames[i], calculatedAverages[i])
 
 
 resultvalues = []
