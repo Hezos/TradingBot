@@ -39,26 +39,44 @@ def GenerateIndexMatrix(genomes:[]):
 
 
 
-def MakeRandomGeneration():
+def MakeRandomGeneration(genomecount = 10):
     genomes = []
-    for i in range(0, 10):
+    for i in range(0, genomecount):
         genome = GenomeModel(0,0,0)
-        genome.SandP = random.randint(0,100)
-        genome.analystrating = random.randint(0,100)
-        genome.affected = random.randint(0,100)
-        genome.linearregslope = random.randint(0,100)
-        genome.linearregline = random.randint(0,100)
-        genome.levelsupport = random.randint(0,100)
-        genome.movingaveragecross = random.randint(0,100)
-        genome.relativestrength = random.randint(0,100)
-        genome.MACDcross = random.randint(0,100)
-        genome.bollinger = random.randint(0,100)
-        genome.EMAsign = random.randint(0,100)
-        genome.predicted = random.randint(0,100)
-        genome.actual = random.randint(1,100)
+        genome.SandP = random.randint(1,10)
+        genome.analystrating = random.randint(1,10)
+        genome.affected = random.randint(1,10)
+        genome.linearregslope = random.randint(1,10)
+        genome.linearregline = random.randint(1,10)
+        genome.levelsupport = random.randint(1,10)
+        genome.movingaveragecross = random.randint(1,10)
+        genome.relativestrength = random.randint(1,10)
+        genome.MACDcross = random.randint(1,10)
+        genome.bollinger = random.randint(1,10)
+        genome.EMAsign = random.randint(1,10)
+        genome.predicted = random.randint(1,10)
+        genome.actual = random.randint(1,10)
         genomes.append(genome)
     return genomes
 
+
+
+def MakeGenerationFromFile():
+    genomes = []
+    f = open("InfluenceRationData.txt")
+    factorRatios = json.loads(f.read())
+    f.close()
+
+    genomes = MakeRandomGeneration(len(factorRatios))
+
+    for i in range(0, len(factorRatios)):
+        genomes[i].RSI = factorRatios[i][0] 
+        genomes[i].movingaveragecross = factorRatios[i][1] 
+        genomes[i].EMAsign = factorRatios[i][2] 
+        genomes[i].bollinger = factorRatios[i][3] 
+        genomes[i].MACDcross = factorRatios[i][4] 
+        
+    return genomes
 
 #Generating a genome
 '''
@@ -69,7 +87,7 @@ def make_genome(RefindeGenome:Refined):
 def CalculatePredicted(factorRatios, factorAverages):
     result = []
     for i in len(0,factorRatios):
-        result.append(factorRatios * factorAverages)
+        result.append(factorRatios[i] * factorAverages[i])
     return result
 
 #Calculating the fitness function, change this to a list later
@@ -227,7 +245,8 @@ def mutate(genome, factorAverages):
 def genetic_algorithm():
     #creating innitial population
     #population = init_population(POPULATION_SIZE, GENOME_LENGHT, Data)
-    population = MakeRandomGeneration()
+    #population = MakeRandomGeneration()
+    population = MakeGenerationFromFile()
     f = open("FactorAverages.txt")
     factorAverages = json.loads(f.read())
     f.close()
@@ -258,3 +277,5 @@ def genetic_algorithm():
     print(f'Best fitness: {fitness(best_solution, Actuals)}')
 
 genetic_algorithm()
+#for item in MakeGenerationFromFile():
+#    print(item.RSI, item.EMAsign)

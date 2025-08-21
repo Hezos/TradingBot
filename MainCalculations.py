@@ -1,7 +1,6 @@
 import json
 
 def ReadDesignData():
-    gen0 = []
     print("Reading DOE data from file....")
     f = open("InfluenceRationData.txt")
     ratioData = f.read()
@@ -17,6 +16,7 @@ class gModel():
 def GetActualPrices():
     print("Read actual prices from a file")
 
+#This is not right here
 models = []
 gen0 = ReadDesignData()
 for genom in gen0:
