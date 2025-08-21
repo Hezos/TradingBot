@@ -1,6 +1,6 @@
 import random
 from GatherData import Refined
-
+import json
 
 POPULATION_SIZE = 100
 GENOME_LENGHT = 3
@@ -66,10 +66,8 @@ def make_genome(RefindeGenome:Refined):
     return RefindeGenome
 '''
 
-def CalculatePredicted(factorRatios):
+def CalculatePredicted(factorRatios, factorAverages):
     result = []
-    f = open("FactorAverages.txt")
-    factorAverages = json.loads(f.read())
     for i in len(0,factorRatios):
         result.append(factorRatios * factorAverages)
     return result
@@ -215,7 +213,7 @@ def crossover(population, fitness_values):
     #Do a linear regression result recalculation before passing the parents
     return parent1, parent2
 
-def mutate(genome):
+def mutate(genome, factorAverages):
     #This function is used to calculate the predictions
     factors = []
     factors.append(genome.RSI)
@@ -223,13 +221,16 @@ def mutate(genome):
     factors.append(genome.movingaveragecross)
     factors.append(genome.bollinger)
     factors.append(genome.bollinger)
-    genome.predicted = CalculatePredicted(factors)
+    genome.predicted = CalculatePredicted(factors, factorAverages)
     return genome
 
 def genetic_algorithm():
     #creating innitial population
     #population = init_population(POPULATION_SIZE, GENOME_LENGHT, Data)
     population = MakeRandomGeneration()
+    f = open("FactorAverages.txt")
+    factorAverages = json.loads(f.read())
+    f.close()
     Actuals = []
     for element in population:
         Actuals.append(element.actual)
@@ -243,7 +244,7 @@ def genetic_algorithm():
         for genome in population:
             offspring1, offspring2 = crossover(population, fitness_values)
         if offspring1 not in population or offspring2 not in population:
-            population.extend([mutate(offspring1), mutate(offspring2)])
+            population.extend([mutate(offspring1, factorAverages), mutate(offspring2, factorAverages)])
         #collecting fitness values.
         fitness_values = [fitness(genome, Actuals) for genome in population]
         #for fitness_v in fitness_values:
