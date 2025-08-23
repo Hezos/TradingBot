@@ -61,7 +61,7 @@ def MakeRandomGeneration(genomecount = 10):
 
 
 
-def MakeGenerationFromFile():
+def MakeGenerationFromFile(factorAverages):
     genomes = []
     f = open("InfluenceRationData.txt")
     factorRatios = json.loads(f.read())
@@ -70,12 +70,19 @@ def MakeGenerationFromFile():
     genomes = MakeRandomGeneration(len(factorRatios))
 
     for i in range(0, len(factorRatios)):
+        factors = []
         genomes[i].RSI = factorRatios[i][0] 
         genomes[i].movingaveragecross = factorRatios[i][1] 
         genomes[i].EMAsign = factorRatios[i][2] 
         genomes[i].bollinger = factorRatios[i][3] 
         genomes[i].MACDcross = factorRatios[i][4] 
+        factors.append(factorRatios[i][0])
+        factors.append(factorRatios[i][1])
+        factors.append(factorRatios[i][2])
+        factors.append(factorRatios[i][3])
+        factors.append(factorRatios[i][4])
         
+        genomes[i].predicted = CalculatePredicted(factors, factorAverages)        
     return genomes
 
 #Generating a genome
@@ -85,9 +92,9 @@ def make_genome(RefindeGenome:Refined):
 '''
 
 def CalculatePredicted(factorRatios, factorAverages):
-    result = []
-    for i in len(0,factorRatios):
-        result.append(factorRatios[i] * factorAverages[i])
+    result = 0
+    for i in range(0, len(factorRatios)):
+        result += factorRatios[i] * factorAverages
     return result
 
 #Calculating the fitness function, change this to a list later
@@ -109,7 +116,7 @@ def crossover(population, fitness_values):
             if(i != j):
                 if population[i].RSI != 0:
                 #Do not hardcode numbers, use percentages instead!
-                    if(abs(population[i].RSI - population[j].RSI) / population[i].RSI < 0.08):
+                    if(abs(population[i].RSI - population[j].RSI) / population[i].RSI <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.RSI = testParent2.RSI
@@ -119,7 +126,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2
                 if population[i].SandP != 0:
-                    if(abs(population[i].SandP - population[j].SandP) / population[i].SandP < 0.08):
+                    if(abs(population[i].SandP - population[j].SandP) / population[i].SandP <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.SandP = testParent2.SandP
@@ -129,7 +136,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2
                 if population[i].analystrating != 0:
-                    if(abs(population[i].analystrating - population[j].analystrating) / population[i].analystrating < 0.08):
+                    if(abs(population[i].analystrating - population[j].analystrating) / population[i].analystrating <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.analystrating = testParent2.analystrating
@@ -139,7 +146,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2
                 if population[i].affected != 0:
-                    if(abs(population[i].affected - population[j].affected) / population[i].affected < 0.08):
+                    if(abs(population[i].affected - population[j].affected) / population[i].affected <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.affected = testParent2.affected
@@ -149,7 +156,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2            
                 if population[i].linearregslope != 0:
-                    if(abs(population[i].linearregslope - population[j].linearregslope) / population[i].linearregslope< 0.08):
+                    if(abs(population[i].linearregslope - population[j].linearregslope) / population[i].linearregslope <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.linearregslope = testParent2.linearregslope
@@ -159,7 +166,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2
                 if population[i].linearregline != 0:  
-                    if(abs(population[i].linearregline - population[j].linearregline) / population[i].linearregline < 0.08):
+                    if(abs(population[i].linearregline - population[j].linearregline) / population[i].linearregline <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.linearregline = testParent2.linearregline
@@ -169,7 +176,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2
                 if population[i].levelsupport != 0: 
-                    if(abs(population[i].levelsupport - population[j].levelsupport) / population[i].levelsupport < 0.08):
+                    if(abs(population[i].levelsupport - population[j].levelsupport) / population[i].levelsupport <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.levelsupport = testParent2.levelsupport
@@ -179,7 +186,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2
                 if population[i].movingaveragecross != 0:   
-                    if(abs(population[i].movingaveragecross - population[j].movingaveragecross) / population[i].movingaveragecross < 0.11):
+                    if(abs(population[i].movingaveragecross - population[j].movingaveragecross) / population[i].movingaveragecross <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.movingaveragecross = testParent2.movingaveragecross
@@ -189,7 +196,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2
                 if population[i].relativestrength != 0:
-                    if(abs(population[i].relativestrength - population[j].relativestrength) / population[i].relativestrength < 0.08):
+                    if(abs(population[i].relativestrength - population[j].relativestrength) / population[i].relativestrength <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.relativestrength = testParent2.relativestrength
@@ -199,7 +206,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2
                 if population[i].MACDcross != 0:            
-                    if(abs(population[i].MACDcross - population[j].MACDcross) / population[i].MACDcross < 0.08):
+                    if(abs(population[i].MACDcross - population[j].MACDcross) / population[i].MACDcross <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.MACDcross = testParent2.MACDcross
@@ -209,7 +216,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2
                 if population[i].bollinger != 0:
-                    if(abs(population[i].bollinger - population[j].bollinger) / population[i].bollinger < 0.08):
+                    if(abs(population[i].bollinger - population[j].bollinger) / population[i].bollinger <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.bollinger = testParent2.bollinger
@@ -219,7 +226,7 @@ def crossover(population, fitness_values):
                         parent1 = testParent1
                         parent2 = testParent2
                 if population[i].EMAsign != 0:
-                    if(abs(population[i].EMAsign - population[j].EMAsign) / population[i].EMAsign < 0.08):
+                    if(abs(population[i].EMAsign - population[j].EMAsign) / population[i].EMAsign <= 0.15):
                         testParent1 = population[i]
                         testParent2 = population[j]
                         testParent1.EMAsign = testParent2.EMAsign
@@ -246,10 +253,10 @@ def genetic_algorithm():
     #creating innitial population
     #population = init_population(POPULATION_SIZE, GENOME_LENGHT, Data)
     #population = MakeRandomGeneration()
-    population = MakeGenerationFromFile()
     f = open("FactorAverages.txt")
     factorAverages = json.loads(f.read())
     f.close()
+    population = MakeGenerationFromFile(factorAverages)
     Actuals = []
     for element in population:
         Actuals.append(element.actual)
@@ -273,8 +280,10 @@ def genetic_algorithm():
     #best found genomes
     best_index = fitness_values.index(min(fitness_values))
     best_solution = population[best_index]
-    print(f'Best Solution: {best_solution}')
+    print(f'Best Solution: {best_solution.predicted}')
+    print(sum(Actuals) / len(Actuals))
     print(f'Best fitness: {fitness(best_solution, Actuals)}')
+
 
 genetic_algorithm()
 #for item in MakeGenerationFromFile():

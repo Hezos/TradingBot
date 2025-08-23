@@ -176,13 +176,13 @@ def FactorAverages(data):
             result.append(sumValue / count)
     return result
 
+#Removed the multiplication with the registered values, because DOE samples create every combination even the future ones, which don't have registered indicator value yet
 def MainEffects(InputDF, ResultColumnName, factorAverages):
     factors = [col for col in InputDF.columns if col != ResultColumnName]
     main_effects = {}
     for factor in factors:
-        averValue = factorAverages[factor][0]
-        mean_plus = df[df[factor] == 1][ResultColumnName].mean() * averValue
-        mean_minus = df[df[factor] == -1][ResultColumnName].mean() * averValue
+        mean_plus = df[df[factor] == 1][ResultColumnName].mean()
+        mean_minus = df[df[factor] == -1][ResultColumnName].mean()
         main_effects[factor] = mean_plus - mean_minus
     return main_effects
 
@@ -234,16 +234,19 @@ df = DesignOfExperimentsFunction(['RSI','EMA',"SMA","BBup","BBdown"])
 columnNames = ['RSI','EMA',"SMA","BBup","BBdown"]
 factAver = pd.DataFrame(columnNames)
 calculatedAverages = FactorAverages(data)
+resultvalues = []
+for i in range(0,32):
+    resultvalues.append(random.randrange(1,10))
+
 with open("FactorAverages.txt", "w") as f:
-        f.write(json.dumps(calculatedAverages))
+        #f.write(json.dumps(calculatedAverages))
+        f.write(json.dumps(sum(resultvalues)/len(resultvalues)))
+f.close()
 print("Averages of factors were saved.")
 for i in range(0, len(columnNames)): 
     factAver.insert(i, columnNames[i], calculatedAverages[i])
 
 
-resultvalues = []
-for i in range(0,32):
-    resultvalues.append(i * random.randrange(0,10))
 df.insert(5,"Result",resultvalues)
 effects = MainEffects(df, "Result", factAver)
 df = df.drop("Result", axis='columns')
