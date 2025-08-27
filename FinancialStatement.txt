@@ -1,0 +1,109 @@
+Pénzügyi kimutatás összegzi a cég pénzügyi teljesítményét és helyzetét
+4 nagyobb rész:
+ balnce sheet,
+ income statement,
+ cash flow statement,
+ shareholders' equity
+Balance sheet:
+Assets,
+Kötelezettségek, hitel,
+Részvényesek jogai
+
+Assets:
+Cash and cash: liquid értékek
+Accounts receivable: vásárlók elköltött pénze
+Eszköztár: termékek vagy nyersanyagok
+Előre fizetett összegek: Fogyasztás fenntartásához szükséges költekezés
+
+Property, Plant, and Equipment (PP&E)
+Intangible Assets
+Long-term Investments
+Deferred Tax Assets
+
+Liabilities 
+
+Accounts Payable: Money owed to suppliers and vendors.
+Short-term Debt: Loans or credit lines due within the year.
+Accrued Expenses: Incurred, but unpaid costs like wages or taxes.
+Unearned Revenue: Money received for goods or services not yet delivered.
+
+Long-term Debt: Debt payable in more than one year, such as bonds or long-term loans.
+Deferred Tax Liabilities: Future tax payments.
+Pension Liabilities: Employee retirement benefits obligations.
+Lease Liabilities: Long-term lease commitments for buildings or equipment. 
+
+Equity:
+
+Common Stock/Preferred Stock: Value of issued shares.
+Retained Earnings: Profits not distributed as dividends.
+Treasury Stock: The company's repurchased stock.
+
+Income Statement:
+Jövedelem, költekezés, adó utáni bevétel, bevétel részvényenként
+
+Revenue: Total income from sales or services rendered.
+Cost of Goods Sold (COGS): Cost of producing goods.
+Gross Profit: All revenue minus the cost of goods sold. 
+Operating Expenses: Costs to run the company, such as rent, salaries, and utilities. Net Income: The final profit after paying all expenses and taxes.
+
+Comprehensive Income
+
+Comprehensive income expands equity exploration by including items not typically seen on a traditional income statement. It accounts for adjustments in securities held for sale by the firm, unrealized gains or losses on investments, hedging activities, foreign currency exchange rate changes, and adjustments to future pensions.
+
+Some companies produce a separate statement for comprehensive income, while others include it as a footnote on the income statement. While it is easy to overlook, comprehensive income gives a much fuller picture of the company's financial position. 
+
+Cash Flow Statement:
+Hogyan költi a vezetés a pénz, a cég felé vagy ki belőle
+
+Operating activities: Cash from day-to-day business operations
+Investing activities: Cash spent on or earned from investments
+Financing activities: Cash made from borrowing, debt repayment, or issuing stock
+
+Statement of Shareholders’ Equity
+
+The Statement of Shareholders' Equity shows how a company's equity changes over a reporting period. It complements the balance sheet and helps assess whether the company's stock is profitable. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
