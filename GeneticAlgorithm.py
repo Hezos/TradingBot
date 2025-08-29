@@ -280,6 +280,7 @@ def genetic_algorithm():
     #best found genomes
     best_index = fitness_values.index(min(fitness_values))
     best_solution = population[best_index]
+    #We are interested in the variables
     print(f'Best Solution: {best_solution.predicted}')
     print(sum(Actuals) / len(Actuals))
     print(f'Best fitness: {fitness(best_solution, Actuals)}')

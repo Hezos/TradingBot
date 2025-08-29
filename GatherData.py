@@ -191,8 +191,11 @@ def GetInfluenceRatios(factors, columnnames):
     sumValue = 0
     for name in columnnames:
         sumValue += factors[name]
-    for name in columnnames:
-        resultArray.append(factors[name] / sumValue)
+    if sumValue != 0:
+        for name in columnnames:
+            resultArray.append(factors[name] / sumValue)
+    else:
+        print("Tried to divide with zero.")
     return resultArray
     
 
@@ -229,13 +232,13 @@ def RegressionFunction():
     regression.coef_[0][0] = 1
     print(regression.predict(polynomialfeatures.transform([randoms])))
 #RegressionFunction()
-df = DesignOfExperimentsFunction(['RSI','EMA',"SMA","BBup","BBdown"])
+df = DesignOfExperimentsFunction(['RSI','EMA',"SMA","BBup","BBdown", "LevelSupport", "AnalystRating","MovingAverageCross"])
 
-columnNames = ['RSI','EMA',"SMA","BBup","BBdown"]
+columnNames = ['RSI','EMA',"SMA","BBup","BBdown","LevelSupport", "AnalystRating","MovingAverageCross"]
 factAver = pd.DataFrame(columnNames)
 calculatedAverages = FactorAverages(data)
 resultvalues = []
-for i in range(0,32):
+for i in range(0,pow(2, len(columnNames))):
     resultvalues.append(random.randrange(1,10))
 
 with open("FactorAverages.txt", "w") as f:
@@ -247,7 +250,7 @@ for i in range(0, len(columnNames)):
     factAver.insert(i, columnNames[i], calculatedAverages[i])
 
 
-df.insert(5,"Result",resultvalues)
+df.insert(6,"Result",resultvalues)
 effects = MainEffects(df, "Result", factAver)
 df = df.drop("Result", axis='columns')
 InfluenceRatios = []
