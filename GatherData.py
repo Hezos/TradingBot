@@ -5,6 +5,7 @@ from sklearn.preprocessing import PolynomialFeatures
 import json
 import random
 from pyDOE3 import *
+from Models.stockinfo import stockinfo
 
 class StockInfo:
         SandPdirection = 0
@@ -27,34 +28,6 @@ class StockInfo:
             return json.dump(self)
 
     
-class Refined:
-    #Just to let me convert it to dictionary 
-    Index = 0
-    SandP = 0
-    analystrating = 0
-    affected = 0
-    linearregslope = 0
-    linearregline = 0
-    levelsupport = 0
-    movingaveragecross = 0
-    relativestrength = 0
-    MACDcross = 0
-    bollinger = 0
-    EMAsign = 0
-    def Dictionary(this,indexV):
-        return { "Index" : indexV,
-                "SandP" : this.SandP,
-                "analystrating" : this.analystrating,
-                "affected" : this.affected,
-                "linearregline" : this.linearregline,
-                "levelsupport" : this.levelsupport,
-                 "movingaveragecross" : this.movingaveragecross,
-                "relativestrength" : this.relativestrength,
-                "MACDcross" : this.MACDcross,
-                "bollinger" : this.bollinger,
-                "EMAsign" : this.EMAsign
-     }
-
 '''
 samples = int(input("How many samples do you want to register?\n"))
 
@@ -137,7 +110,7 @@ refinds = []
 
 for i in range(0, 4):
     #testing class conversion to dataframe:
-    myrefind = Refined()
+    myrefind = stockinfo()
     myrefind.SandP = random.randrange(1,5)
     myrefind.analystrating = random.randrange(1,5)
     myrefind.affected = random.randrange(1,5)
@@ -149,13 +122,12 @@ for i in range(0, 4):
     myrefind.MACDcross = random.randrange(1,5)
     myrefind.bollinger = random.randrange(1,5)
     myrefind.EMAsign = random.randrange(1,5)
+    print(myrefind.Dictionary(i))
     refinds.append(myrefind.Dictionary(i))
-
-
 
 data = pd.DataFrame(data= refinds)
 #delete these drops later
-data.drop(["Index", "SandP", "analystrating", "affected","linearregline","levelsupport"],axis="columns")
+#data.drop(["Index", "SandP", "analystrating", "affected","linearregline","levelsupport"],axis="columns")
 print(data)
 
 def DesignOfExperimentsFunction(factors, randomize=False):
@@ -195,7 +167,7 @@ def GetInfluenceRatios(factors, columnnames):
         for name in columnnames:
             resultArray.append(factors[name] / sumValue)
     else:
-        print("Tried to divide with zero.")
+        print(f"tried to divide by zero {sumValue}")
     return resultArray
     
 
