@@ -217,6 +217,16 @@ with open("FactorAverages.txt", "w") as f:
         #f.write(json.dumps(calculatedAverages))
         f.write(json.dumps(sum(resultvalues)/len(resultvalues)))
 f.close()
+
+saveActuals = []
+for i in range(0,len(resultvalues)):
+    saveActuals.append(resultvalues[i])
+with open("Actuals.txt", "w") as f:
+        #f.write(json.dumps(calculatedAverages))
+        f.write(json.dumps(saveActuals))
+f.close()
+
+
 print("Averages of factors were saved.")
 for i in range(0, len(columnNames)): 
     factAver.insert(i, columnNames[i], calculatedAverages[i])

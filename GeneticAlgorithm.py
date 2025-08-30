@@ -1,5 +1,4 @@
 import random
-from GatherData import Refined
 import json
 
 POPULATION_SIZE = 100
@@ -12,10 +11,9 @@ GENERATIONS = RegressionCount * ColumnCount
 
 #Use the refined model
 class GenomeModel:
-    def __init__(self, RSI, Aup, Adown):
-        self.RSI = RSI
-        self.Aup = Aup
-        self.Adown = Adown
+    def __init__(self):
+        self.Index = 0
+    Index = 0
     SandP = 0
     analystrating = 0
     affected = 0
@@ -29,8 +27,9 @@ class GenomeModel:
     EMAsign = 0
     predicted = 0
     actual = 0
+    fitness = 0
 
-parent2 = GenomeModel(0,0,0)
+parent2 = GenomeModel()
 parent2.actual = 1
 
 def GenerateIndexMatrix(genomes:[]):
@@ -42,7 +41,7 @@ def GenerateIndexMatrix(genomes:[]):
 def MakeRandomGeneration(genomecount = 10):
     genomes = []
     for i in range(0, genomecount):
-        genome = GenomeModel(0,0,0)
+        genome = GenomeModel()
         genome.SandP = random.randint(1,10)
         genome.analystrating = random.randint(1,10)
         genome.affected = random.randint(1,10)
@@ -238,6 +237,17 @@ def crossover(population, fitness_values):
     #Do a linear regression result recalculation before passing the parents
     return parent1, parent2
 
+def orderFitness(genomes):
+    result = []
+
+    genomes.sort(key=lambda genome: genome.fitness, reverse=False)
+    # 400 seems to be a breaking point at 55 generations
+    for i in range(0, 400):
+        result.append(genomes[i])
+    print("Filtered list")
+    return result
+
+
 def mutate(genome, factorAverages):
     #This function is used to calculate the predictions
     factors = []
@@ -258,17 +268,23 @@ def genetic_algorithm():
     f.close()
     population = MakeGenerationFromFile(factorAverages)
     Actuals = []
-    for element in population:
-        Actuals.append(element.actual)
+    f = open("Actuals.txt")
+    Actuals = json.loads(f.read())
+    f.close()
+    print("Generated initial polpulation")
     #looping throught generations
     for generation in range(GENERATIONS):
         #calculating fitness values change firness to errorfitness later!
         fitness_values = []
         for genome in population:
-            fitness_values.append(fitness(genome= genome, actuals= Actuals))
+            fitnessValue = fitness(genome= genome, actuals= Actuals)
+            fitness_values.append(fitnessValue)
+            genome.fitness = fitnessValue
+        population = orderFitness(population)
         #making a new population
         for genome in population:
             offspring1, offspring2 = crossover(population, fitness_values)
+
         if offspring1 not in population or offspring2 not in population:
             population.extend([mutate(offspring1, factorAverages), mutate(offspring2, factorAverages)])
         #collecting fitness values.
