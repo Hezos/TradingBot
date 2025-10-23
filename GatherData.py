@@ -204,9 +204,8 @@ def RegressionFunction():
     regression.coef_[0][0] = 1
     print(regression.predict(polynomialfeatures.transform([randoms])))
 #RegressionFunction()
-df = DesignOfExperimentsFunction(['RSI','EMA',"SMA","BBup","BBdown", "LevelSupport", "AnalystRating","MovingAverageCross"])
-
-columnNames = ['RSI','EMA',"SMA","BBup","BBdown","LevelSupport", "AnalystRating","MovingAverageCross"]
+df = DesignOfExperimentsFunction(['RSI','EMA',"SMA","BBup","BBdown", "LevelSupport", "AnalystRating","MovingAverageCross","LinearRegLine"])
+columnNames = ['RSI','EMA',"SMA","BBup","BBdown","LevelSupport", "AnalystRating","MovingAverageCross","LinearRegLine"]
 factAver = pd.DataFrame(columnNames)
 calculatedAverages = FactorAverages(data)
 resultvalues = []
