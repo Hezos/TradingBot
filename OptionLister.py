@@ -1,5 +1,13 @@
+#Theory:
+
+
+
+
 #from yahoo_fin import options
 import yfinance as yf
+import greeks_package as gp
+
+
 
 def list_call_options(symbol):
     """
@@ -24,4 +32,19 @@ def list_call_options(symbol):
         print("\n")
 
 symbol = input("Enter stock symbol: ").strip().upper()
-list_call_options(symbol)
+#list_call_options(symbol)
+
+
+# Download Apple call options within 30 days, ±5% moneyness
+opts = gp.download_options(symbol, opt_type="c", max_days=100)
+
+# Calculate all Greeks in one line
+all_greeks = opts.apply(gp.greeks, axis=1, ticker=symbol)
+
+# Combine with original data
+full_data = opts.join(all_greeks)
+print(full_data[['strike', 'lastPrice', 'Delta', 'Gamma', 'Vega', 'Theta']].head())
+
+
+
+
